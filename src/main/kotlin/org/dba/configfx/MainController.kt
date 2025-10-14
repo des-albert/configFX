@@ -12,6 +12,8 @@ import javafx.scene.control.Button
 import javafx.scene.control.CheckBox
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
+import javafx.scene.control.Tab
+import javafx.scene.control.TabPane
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 import javafx.scene.control.TextArea
@@ -54,7 +56,46 @@ class MainController {
     data class SkuSearchResult(val ucid: String, val fileName: String, val quantity: Int)
 
     @FXML
-    lateinit var buttonPart: Button
+    lateinit var tabSKUsearch: Tab
+
+    @FXML
+    lateinit var tabParts: Tab
+
+    @FXML
+    lateinit var tabOpportunity: Tab
+
+    @FXML
+    lateinit var tabSummary: Tab
+
+    @FXML
+    lateinit var tabMain: Tab
+
+    @FXML
+    lateinit var tabPane: TabPane
+
+    @FXML
+    lateinit var buttonParts: Button
+
+    @FXML
+    lateinit var searchProductSkuButton: Button
+
+    @FXML
+    lateinit var opeSearchButton: Button
+
+    @FXML
+    lateinit var scanButton: Button
+
+    @FXML
+    lateinit var buttonLoad: Button
+
+    @FXML
+    lateinit var buttonQuit: Button
+
+    @FXML
+    lateinit var buttonStore: Button
+
+    @FXML
+    lateinit var reportButton: Button
 
     @FXML
     lateinit var skuSearchStatusLabel: Label
@@ -72,37 +113,10 @@ class MainController {
     lateinit var skuResultsTableView: TableView<SkuSearchResult>
 
     @FXML
-    lateinit var searchProductSkuButton: Button
-
-    @FXML
-    lateinit var skuSearchTextField: TextField
-
-    @FXML
-    lateinit var productSearchComboBox: ComboBox<String>
-
-    @FXML
-    lateinit var downloadCheckBox: CheckBox
-
-    @FXML
-    lateinit var ucidDirTextField: TextField
-
-    @FXML
     lateinit var quantityColumn: TableColumn<Part, Int>
 
     @FXML
     lateinit var descriptionColumn: TableColumn<Part, String>
-
-    @FXML
-    lateinit var skuColumn: TableColumn<Part, String>
-
-    @FXML
-    lateinit var partTableView: TableView<Part>
-
-    @FXML
-    lateinit var scanButton: Button
-
-    @FXML
-    lateinit var ucidFileTextField: TextField
 
     @FXML
     lateinit var exportDateColumn: TableColumn<UcidDetails, String>
@@ -114,22 +128,37 @@ class MainController {
     lateinit var ucidTableView: TableView<UcidDetails>
 
     @FXML
-    lateinit var opeSearchButton: Button
+    lateinit var skuColumn: TableColumn<Part, String>
+
+    @FXML
+    lateinit var partTableView: TableView<Part>
+
+    @FXML
+    lateinit var countColumn: TableColumn<ProductCount, Int>
+
+    @FXML
+    lateinit var productColumn: TableColumn<ProductCount, String>
+
+    @FXML
+    lateinit var productTableView: TableView<ProductCount>
+
+    @FXML
+    lateinit var skuSearchTextField: TextField
+
+    @FXML
+    lateinit var downloadCheckBox: CheckBox
+
+    @FXML
+    lateinit var ucidDirTextField: TextField
+
+    @FXML
+    lateinit var ucidFileTextField: TextField
 
     @FXML
     lateinit var opeTextField: TextField
 
     @FXML
     lateinit var textFieldDate: TextField
-
-    @FXML
-    lateinit var buttonLoad: Button
-
-    @FXML
-    lateinit var buttonQuit: Button
-
-    @FXML
-    lateinit var buttonStore: Button
 
     @FXML
     lateinit var textFieldFileName: TextField
@@ -144,28 +173,20 @@ class MainController {
     lateinit var textFieldUCID: TextField
 
     @FXML
+    lateinit var yearTextField: TextField
+
+    @FXML
     lateinit var textFieldProduct: TextField
 
     @FXML
     lateinit var textAreaResult: TextArea
 
     @FXML
-    lateinit var countColumn: TableColumn<ProductCount, Int>
-
-    @FXML
-    lateinit var productColumn: TableColumn<ProductCount, String>
-
-    @FXML
-    lateinit var productTableView: TableView<ProductCount>
-
-    @FXML
     lateinit var monthComboBox: ComboBox<String>
 
     @FXML
-    lateinit var yearTextField: TextField
+    lateinit var productSearchComboBox: ComboBox<String>
 
-    @FXML
-    lateinit var reportButton: Button
 
     var ucidFileName: String = ""
     var ucidDirName: String = ""
@@ -361,7 +382,7 @@ class MainController {
                     val archiveDir = Paths.get(archiveBasePath, dirName)
                     val isUnique = if (Files.isDirectory(archiveDir)) "0" else "1"
 
-                    if ( ! products.contains(product)) {
+                    if (!products.contains(product)) {
                         logger.error("Invalid product $product in $fileName")
                         return null
                     }
@@ -504,6 +525,8 @@ class MainController {
     @FXML
     fun scanFile() {
 
+        tabPane.selectionModel.select(tabParts)
+
         if (ucidFileName.isBlank()) {
             ucidFileName = ucidFileTextField.text
             ucidDirName = ucidDirTextField.text
@@ -563,7 +586,6 @@ class MainController {
             ucidDirTextField.requestFocus()
         }
     }
-
 
 
     private fun loadSearchList(): List<Part> {

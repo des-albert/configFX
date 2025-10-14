@@ -13,8 +13,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="650.0" styleClass="root" stylesheets="@../../../css/style.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dba.configfx.MainController">
-    <Tab text="Main">
+<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="650.0" styleClass="root" stylesheets="@../../../css/style.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dba.configfx.MainController">
+    <Tab fx:id="tabMain" text="Main">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="506.0" prefWidth="679.0">
             <Button fx:id="buttonLoad" layoutX="341.0" layoutY="28.0" mnemonicParsing="false" onAction="#loadData" text="Load Data" />
             <Button fx:id="buttonStore" layoutX="514.0" layoutY="28.0" mnemonicParsing="false" onAction="#storeConfigData" text="Store Configs" />
@@ -36,11 +36,11 @@
             <Label layoutX="40.0" layoutY="129.0" prefHeight="18.0" prefWidth="81.0" stylesheets="@../../../css/style.css" text="Product" />
             <TextArea fx:id="textAreaResult" layoutX="158.0" layoutY="297.0" prefHeight="198.0" prefWidth="460.0" />
             <TextField fx:id="textFieldDate" layoutX="158.0" layoutY="205.0" prefHeight="25.0" prefWidth="149.0" />
-         <Button fx:id="buttonPart" layoutX="34.0" layoutY="381.0" mnemonicParsing="false" onAction="#scanFile" text="Parts" />
+         <Button fx:id="buttonParts" layoutX="34.0" layoutY="381.0" mnemonicParsing="false" onAction="#scanFile" text="Parts" />
         </AnchorPane>
     </Tab>
 
-    <Tab text="Summary">
+    <Tab fx:id="tabSummary" text="Summary">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="450.0" prefWidth="1000.0">
             <Label layoutX="46.0" layoutY="38.0" style="-fx-font-weight: bold;" text="Monthly Totals" />
             <TableView fx:id="productTableView" layoutX="25.0" layoutY="102.0" prefHeight="380.0" prefWidth="607.0">
@@ -54,7 +54,7 @@
             <Button fx:id="reportButton" layoutX="526.0" layoutY="32.0" onAction="#generateProductReport" text="Generate" />
         </AnchorPane>
     </Tab>
-    <Tab text="Opportunity">
+    <Tab fx:id="tabOpportunity" text="Opportunity">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="450.0" prefWidth="1000.0">
             <Label layoutX="65.0" layoutY="35.0" style="-fx-font-weight: bold;" text="Opportunity Details" />
             <TextField fx:id="opeTextField" layoutX="224.0" layoutY="32.0" prefWidth="180.0" promptText="Enter Opportunity ID (OPE)" />
@@ -68,7 +68,7 @@
             </TableView>
         </AnchorPane>
     </Tab>
-    <Tab text="Parts">
+    <Tab fx:id="tabParts" text="Parts">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
             <TextField fx:id="ucidFileTextField" layoutX="50.0" layoutY="68.0" prefHeight="25.0" prefWidth="527.0" promptText="UCID File" />
             <Button fx:id="scanButton" layoutX="362.0" layoutY="24.0" onAction="#scanFile" text="Scan UCID" />
@@ -84,7 +84,7 @@
         </AnchorPane>
     </Tab>
 
-    <Tab text="SKU Search">
+    <Tab fx:id="tabSKUsearch" text="SKU Search">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                 <Label layoutX="14.0" layoutY="25.0" text="Product:" />
                 <ComboBox fx:id="productSearchComboBox" layoutX="75.0" layoutY="21.0" prefWidth="250.0" promptText="Select a Product" />
