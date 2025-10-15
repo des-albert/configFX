@@ -23,11 +23,19 @@ object MongoManage {
             logger.info("Connecting to MongoDB at mongodb://localhost:27017")
             client = MongoClient.create("mongodb://localhost:27017")
             database = client?.getDatabase(DATABASE_NAME)
-            collection = database?.getCollection<Config>("configs")
-                ?: throw IllegalStateException("MongoDB is not connected. Call MongoManage.connect() first.")
+
         } catch (e: Exception) {
             logger.error("Failed to connect to MongoDB: ${e.message}")
         }
+    }
+
+    fun select(year: String)  {
+        try {
+            collection = database?.getCollection<Config>("configs$year")
+                ?: throw IllegalStateException("MongoDB is not connected. Call MongoManage.connect() first.")
+        } catch (e: Exception) {
+        logger.error("Failed to select collection: ${e.message}")
+    }
     }
 
     fun close() {

@@ -12,12 +12,14 @@ import javafx.scene.control.Button
 import javafx.scene.control.CheckBox
 import javafx.scene.control.ComboBox
 import javafx.scene.control.Label
+import javafx.scene.control.RadioButton
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
+import javafx.scene.control.ToggleGroup
 import javafx.scene.control.cell.PropertyValueFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,6 +56,15 @@ class MainController {
     data class Part(var quantity: Int, val sku: String, val description: String)
     data class UcidInfo(val ucid: String, val fileName: String)
     data class SkuSearchResult(val ucid: String, val fileName: String, val quantity: Int)
+
+    @FXML
+    lateinit var radio2026: RadioButton
+    @FXML
+    lateinit var radio2025: RadioButton
+    @FXML
+    lateinit var radio2024: RadioButton
+    @FXML
+    lateinit var yearGroup: ToggleGroup
 
     @FXML
     lateinit var tabSKUsearch: Tab
@@ -190,6 +201,7 @@ class MainController {
 
     var ucidFileName: String = ""
     var ucidDirName: String = ""
+    var currentYear: String = "2025"
 
 
     companion object {
@@ -201,12 +213,15 @@ class MainController {
     private val controllerScope = CoroutineScope(Dispatchers.JavaFx + SupervisorJob())
     private val dataFormatter = DataFormatter()
 
-    val archiveBasePath =
-        "C:\\Users\\albertd\\OneDrive - Hewlett Packard Enterprise\\HPE\\Configs\\2025"
+    val archiveRootPath = "C:\\Users\\albertd\\OneDrive - Hewlett Packard Enterprise\\HPE\\Configs\\"
+    var archiveBasePath = archiveRootPath + currentYear
     val downloadPath: Path = Paths.get("C:\\Users\\albertd\\Downloads")
 
     @FXML
     fun initialize() {
+
+        MongoManage.select(currentYear)
+
         productColumn.cellValueFactory = PropertyValueFactory("product")
         countColumn.cellValueFactory = PropertyValueFactory("count")
 
@@ -263,6 +278,32 @@ class MainController {
                 textAreaResult.text = "No data found for UCID: $ucidToFind"
             }
         }
+    }
+
+    fun yearSelect() {
+        val selectedToggle = yearGroup.selectedToggle
+        var selectedYear = ""
+        if (selectedToggle != null ) {
+            val selectedRadio = selectedToggle as RadioButton
+            selectedYear = selectedRadio.text
+        }
+        if ( selectedYear !== currentYear) {
+            currentYear = selectedYear
+            yearTextField.text = currentYear
+
+
+            MongoManage.select(selectedYear)
+            archiveBasePath = archiveRootPath + currentYear
+
+            controllerScope.launch {
+                val count = withContext(Dispatchers.IO) {
+                    MongoManage.collection.countDocuments()
+
+                }
+                textAreaResult.text = "Year $currentYear selected count: $count"
+            }
+        }
+     
     }
 
     @FXML
@@ -404,9 +445,9 @@ class MainController {
     @FXML
     fun generateProductReport() {
         val selectedMonthName = monthComboBox.value
-        val year = yearTextField.text
 
-        if (selectedMonthName.isNullOrBlank() || year.isNullOrBlank()) {
+
+        if (selectedMonthName.isNullOrBlank() ) {
             productTableView.placeholder = Label("Please select a month and enter a year")
             return
         }
@@ -418,7 +459,7 @@ class MainController {
         controllerScope.launch {
             try {
                 val results = withContext(Dispatchers.IO) {
-                    fetchProductCounts(selectedMonthName, year)
+                    fetchProductCounts(selectedMonthName, currentYear)
                 }
 
                 productTableView.items = FXCollections.observableArrayList(results)
