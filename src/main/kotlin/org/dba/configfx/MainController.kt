@@ -58,7 +58,7 @@ class MainController {
     data class UcidInfo(val ucid: String, val fileName: String)
     data class UcidSearchResult(val ucid: String, val sku: String, val fileName: String)
     data class SkuSearchResult(val ucid: String, val fileName: String, val quantity: Int)
-    data class WordSearchResult(val sku: String, var quantity: Int)
+    data class WordSearchResult(val sku: String, val description: String, var quantity: Int)
 
 
     @FXML
@@ -66,12 +66,14 @@ class MainController {
 
     @FXML
     lateinit var wordSearchStatusLabel: Label
-
+    @FXML
+    lateinit var wordSkuColumn: TableColumn<WordSearchResult, String>
+    @FXML
+    lateinit var wordDescColumn: TableColumn<WordSearchResult, String>
     @FXML
     lateinit var wordQuantityColumn: TableColumn<WordSearchResult, String>
 
-    @FXML
-    lateinit var wordSkuColumn: TableColumn<WordSearchResult, String>
+
 
     @FXML
     lateinit var wordResultsTableView: TableView<WordSearchResult>
@@ -268,6 +270,7 @@ class MainController {
         skuQuantityColumn.cellValueFactory = PropertyValueFactory("quantity")
 
         wordSkuColumn.cellValueFactory = PropertyValueFactory("sku")
+        wordDescColumn.cellValueFactory = PropertyValueFactory("description")
         wordQuantityColumn.cellValueFactory = PropertyValueFactory("quantity")
 
         val months = Month.entries.map { it.getDisplayName(TextStyle.FULL, Locale.ENGLISH) }
@@ -823,6 +826,8 @@ class MainController {
         return 0
     }
 
+    // Search the most recent UCIDs for the selected product
+
     @FXML
     fun searchWord() {
         val selectedProduct = wordSearchComboBox.value
@@ -858,14 +863,16 @@ class MainController {
 
                         val filePath = Paths.get(archiveBasePath, ucidInfo.fileName)
                         if (Files.exists(filePath)) {
-                            val sku = scanFileForWord(filePath.toString(), wordToSearch)
-                            if (sku != "") {
+                            val skuList = scanFileForWord(filePath.toString(), wordToSearch)
+                            if (skuList.isNotEmpty()) {
                                 foundFiles += 1
-                                val item = foundResults.find { it.sku == sku }
-                                if (item != null) {
-                                    item.quantity += 1
-                                } else {
-                                    foundResults.add(WordSearchResult(sku, 1))
+                                skuList.forEach { pair:  Pair<String, String> ->
+                                    val item = foundResults.find { it.sku == pair.first }
+                                    if (item != null) {
+                                        item.quantity += 1
+                                    } else {
+                                        foundResults.add(WordSearchResult(pair.first, pair.second, 1))
+                                    }
                                 }
                             }
                         } else {
@@ -920,11 +927,12 @@ class MainController {
             .toList()
     }
 
-    private fun scanFileForWord(filePath: String, wordToSearch: String): String {
+    private fun scanFileForWord(filePath: String, wordToSearch: String): List<Pair<String, String>> {
+        val foundSkus = mutableListOf<Pair<String, String>>()
         try {
             Files.newInputStream(Paths.get(filePath)).use { inputStream ->
                 val workbook = WorkbookFactory.create(inputStream)
-                val sheet = workbook.getSheet("ExpertBOM") ?: return ""
+                val sheet = workbook.getSheet("ExpertBOM") ?: return emptyList()
 
                 for (rowIndex in 6..sheet.lastRowNum) {
                     val row = sheet.getRow(rowIndex) ?: continue
@@ -933,16 +941,17 @@ class MainController {
                     if (descriptionValue.contains(wordToSearch, ignoreCase = true)) {
                         val skuCell = row.getCell(2)
                         if (skuCell != null && skuCell.cellType == CellType.STRING) {
-                            return skuCell.stringCellValue
+                            foundSkus.add(Pair(skuCell.stringCellValue, descriptionValue))
                         }
                     }
                 }
+                return foundSkus
             }
 
         } catch (e: Exception) {
             logger.error("Failed to scan file $filePath for word $wordToSearch", e)
         }
-        return ""
+        return emptyList()
     }
 
 
