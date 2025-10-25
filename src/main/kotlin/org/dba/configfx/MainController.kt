@@ -66,13 +66,15 @@ class MainController {
 
     @FXML
     lateinit var wordSearchStatusLabel: Label
+
     @FXML
     lateinit var wordSkuColumn: TableColumn<WordSearchResult, String>
+
     @FXML
     lateinit var wordDescColumn: TableColumn<WordSearchResult, String>
+
     @FXML
     lateinit var wordQuantityColumn: TableColumn<WordSearchResult, String>
-
 
 
     @FXML
@@ -724,6 +726,8 @@ class MainController {
         }
     }
 
+    // For a selected product, scan all UCIDs to find a SKU
+
     @FXML
     fun searchProductSku() {
         val selectedProduct = productSearchComboBox.value
@@ -801,6 +805,8 @@ class MainController {
             .toList()
     }
 
+    // Scan the UCID Excel file for lines that contain the selected sku - return a quantity
+
     private fun scanFileForSku(filePath: String, skuToSearch: String): Int {
         try {
             Files.newInputStream(Paths.get(filePath)).use { inputStream ->
@@ -826,27 +832,27 @@ class MainController {
         return 0
     }
 
-    // Search the most recent UCIDs for the selected product
+    // Search the most recent UCIDs of each Opportunity for the selected word in the description
 
     @FXML
     fun searchWord() {
-        val selectedProduct = wordSearchComboBox.value
+        val selectedWord = wordSearchComboBox.value
         val wordToSearch = wordSearchTextField.text
 
-        if (selectedProduct.isNullOrBlank() || wordToSearch.isNullOrBlank()) {
+        if (selectedWord.isNullOrBlank() || wordToSearch.isNullOrBlank()) {
             wordSearchStatusLabel.text = "Please select a product and enter a word to search"
             return
         }
 
         wordSearchButton.isDisable = true
         wordResultsTableView.items.clear()
-        wordSearchStatusLabel.text = "Finding UCIDs for selected product: $selectedProduct..."
+        wordSearchStatusLabel.text = "Finding UCIDs for selected product: $selectedWord..."
 
         var foundFiles = 0
         controllerScope.launch {
             try {
                 val searchResults = withContext(Dispatchers.IO) {
-                    val ucidInfoList = fetchRecentUcidInfo(selectedProduct)
+                    val ucidInfoList = fetchRecentUcidInfo(selectedWord)
                     val totalFiles = ucidInfoList.size
                     val foundResults = mutableListOf<WordSearchResult>()
 
@@ -866,7 +872,7 @@ class MainController {
                             val skuList = scanFileForWord(filePath.toString(), wordToSearch)
                             if (skuList.isNotEmpty()) {
                                 foundFiles += 1
-                                skuList.forEach { pair:  Pair<String, String> ->
+                                skuList.forEach { pair: Pair<String, String> ->
                                     val item = foundResults.find { it.sku == pair.first }
                                     if (item != null) {
                                         item.quantity += 1
@@ -886,7 +892,8 @@ class MainController {
 
                 wordResultsTableView.items = FXCollections.observableArrayList(sortedList)
                 if (searchResults.isEmpty()) {
-                    wordSearchStatusLabel.text = "word $wordToSearch not found in any files for product $selectedProduct"
+                    wordSearchStatusLabel.text =
+                        "word $wordToSearch not found in any files for product $selectedWord"
                 } else {
                     wordSearchStatusLabel.text = "Search Complete. Found word in $foundFiles files."
                 }
@@ -901,6 +908,8 @@ class MainController {
             }
         }
     }
+
+    // Fetch UCIDs from MongoDB that match the selected product, sort by exportDate, then return the most recent
 
     private suspend fun fetchRecentUcidInfo(product: String): List<UcidInfo> {
         val pipeline = listOf(
@@ -926,6 +935,8 @@ class MainController {
             .aggregate(pipeline)
             .toList()
     }
+
+    // Scan the UCID Excel file for lines that contain the selected word - return a list of matching skus and descriptions
 
     private fun scanFileForWord(filePath: String, wordToSearch: String): List<Pair<String, String>> {
         val foundSkus = mutableListOf<Pair<String, String>>()
