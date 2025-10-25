@@ -11,7 +11,7 @@ class MainApplication : Application() {
         MongoManage.connect()
 
         val fxmlLoader = FXMLLoader(MainApplication::class.java.getResource("main.fxml"))
-        val scene = Scene(fxmlLoader.load(), 650.0, 550.0)
+        val scene = Scene(fxmlLoader.load(), 750.0, 700.0)
         stage.title = "configFX"
         stage.scene = scene
         stage.show()

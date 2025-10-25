@@ -15,12 +15,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="650.0" styleClass="root" stylesheets="@../../../css/style.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dba.configfx.MainController">
+<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="750.0" styleClass="root" stylesheets="@../../../css/style.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dba.configfx.MainController">
     <Tab fx:id="tabMain" text="Main">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="506.0" prefWidth="679.0">
             <Button fx:id="buttonLoad" layoutX="341.0" layoutY="28.0" mnemonicParsing="false" onAction="#loadData" text="Load Data" />
             <Button fx:id="buttonStore" layoutX="514.0" layoutY="28.0" mnemonicParsing="false" onAction="#storeConfigData" text="Store Configs" />
-            <Button fx:id="buttonQuit" layoutX="34.0" layoutY="455.0" mnemonicParsing="false" onAction="#quit" text="Quit" />
+            <Button fx:id="buttonQuit" layoutX="504.0" layoutY="396.0" mnemonicParsing="false" onAction="#quit" text="Quit" />
             <TextField fx:id="textFieldUCID" layoutX="151.0" layoutY="30.0" promptText="ucid" />
             <TextField fx:id="textFieldCustomer" layoutX="158.0" layoutY="86.0" prefHeight="25.0" prefWidth="460.0" />
             <TextField fx:id="textFieldOPE" layoutX="158.0" layoutY="166.0" prefHeight="25.0" prefWidth="149.0" />
@@ -36,9 +36,9 @@
                 </font>
             </Label>
             <Label layoutX="40.0" layoutY="129.0" prefHeight="18.0" prefWidth="81.0" stylesheets="@../../../css/style.css" text="Product" />
-            <TextArea fx:id="textAreaResult" layoutX="158.0" layoutY="297.0" prefHeight="198.0" prefWidth="460.0" />
+            <TextArea fx:id="textAreaResult" layoutX="158.0" layoutY="297.0" prefHeight="52.0" prefWidth="460.0" />
             <TextField fx:id="textFieldDate" layoutX="158.0" layoutY="205.0" prefHeight="25.0" prefWidth="149.0" />
-         <Button fx:id="buttonParts" layoutX="34.0" layoutY="381.0" mnemonicParsing="false" onAction="#scanFile" text="Parts" />
+         <Button fx:id="buttonParts" layoutX="158.0" layoutY="396.0" mnemonicParsing="false" onAction="#scanFile" text="Parts" />
          <RadioButton fx:id="radio2024" layoutX="467.0" layoutY="139.0" mnemonicParsing="false" onAction="#yearSelect" text="2024">
             <toggleGroup>
                <ToggleGroup fx:id="yearGroup" />
@@ -52,7 +52,7 @@
     <Tab fx:id="tabSummary" text="Summary">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="450.0" prefWidth="1000.0">
             <Label layoutX="46.0" layoutY="38.0" style="-fx-font-weight: bold;" text="Monthly Totals" />
-            <TableView fx:id="productTableView" layoutX="25.0" layoutY="102.0" prefHeight="380.0" prefWidth="607.0">
+            <TableView fx:id="productTableView" layoutX="25.0" layoutY="102.0" prefHeight="536.0" prefWidth="685.0">
                 <columns>
                     <TableColumn fx:id="productColumn" prefWidth="350.0" text="Product" />
                     <TableColumn fx:id="countColumn" prefWidth="256.0" text="Total Configs" />
@@ -69,7 +69,7 @@
             <TextField fx:id="opeTextField" layoutX="224.0" layoutY="32.0" prefWidth="180.0" promptText="Enter Opportunity ID (OPE)" />
             <Button fx:id="opeSearchButton" layoutX="518.0" layoutY="29.0" onAction="#searchByOpe" text="Search by OPE" />
 
-            <TableView fx:id="ucidTableView" layoutX="49.0" layoutY="95.0" prefHeight="395.0" prefWidth="530.0">
+            <TableView fx:id="ucidTableView" layoutX="49.0" layoutY="95.0" prefHeight="549.0" prefWidth="632.0">
                 <columns>
                     <TableColumn fx:id="ucidColumn" prefWidth="250.0" text="UCID" />
                     <TableColumn fx:id="exportDateColumn" prefWidth="279.0" text="Export Date" />
@@ -79,9 +79,9 @@
     </Tab>
     <Tab fx:id="tabParts" text="Parts">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-            <TextField fx:id="ucidFileTextField" layoutX="50.0" layoutY="68.0" prefHeight="25.0" prefWidth="527.0" promptText="UCID File" />
+            <TextField fx:id="ucidFileTextField" layoutX="50.0" layoutY="68.0" prefHeight="25.0" prefWidth="617.0" promptText="UCID File" />
             <Button fx:id="scanButton" layoutX="362.0" layoutY="24.0" onAction="#scanFile" text="Scan UCID" />
-            <TableView fx:id="partTableView" layoutX="50.0" layoutY="110.0" prefHeight="347.0" prefWidth="530.0">
+            <TableView fx:id="partTableView" layoutX="50.0" layoutY="110.0" prefHeight="516.0" prefWidth="614.0">
                 <columns>
                     <TableColumn fx:id="skuColumn" minWidth="0.0" prefWidth="170.0" text="SKU" />
                     <TableColumn fx:id="descriptionColumn" prefWidth="249.0" text="Description" />
@@ -93,14 +93,14 @@
         </AnchorPane>
     </Tab>
 
-    <Tab fx:id="tabSKUsearch" text="SKU Search">
+    <Tab fx:id="tabSKUSearch" text="SKU Search">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                 <Label layoutX="14.0" layoutY="25.0" text="Product:" />
                 <ComboBox fx:id="productSearchComboBox" layoutX="75.0" layoutY="21.0" prefWidth="250.0" promptText="Select a Product" />
                 <Label layoutX="338.0" layoutY="25.0" text="SKU:" />
                 <TextField fx:id="skuSearchTextField" layoutX="371.0" layoutY="21.0" prefHeight="25.0" prefWidth="169.0" promptText="Enter SKU to find" />
                 <Button fx:id="searchProductSkuButton" layoutX="565.0" layoutY="19.0" onAction="#searchProductSku" text="Search" />
-                <TableView fx:id="skuResultsTableView" layoutX="14.0" layoutY="88.0" prefHeight="403.0" prefWidth="622.0">
+                <TableView fx:id="skuResultsTableView" layoutX="14.0" layoutY="88.0" prefHeight="571.0" prefWidth="690.0">
                     <columns>
                         <TableColumn fx:id="skuUcidColumn" prefWidth="150.0" text="UCID" />
                         <TableColumn fx:id="skuQuantityColumn" prefWidth="61.0" text="Quantity" />
@@ -110,4 +110,21 @@
                 <Label fx:id="skuSearchStatusLabel" layoutX="14.0" layoutY="60.0" text="Please select a product and enter a SKU to begin." />
         </AnchorPane>
     </Tab>
+   <Tab fx:id="tabWordSearch" text="Word Search">
+       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <ComboBox fx:id="wordSearchComboBox" layoutX="45.0" layoutY="23.0" prefWidth="250.0" promptText="Select a Product" />
+               <TextField fx:id="wordSearchTextField" layoutX="325.0" layoutY="23.0" prefHeight="25.0" prefWidth="169.0" promptText="Enter word to find" />
+            <Button fx:id="wordSearchButton" layoutX="565.0" layoutY="19.0" onAction="#searchWord" text="Search" />
+               <TableView fx:id="wordResultsTableView" layoutX="101.0" layoutY="100.0" prefHeight="534.0" prefWidth="515.0">
+                  <columns>
+                     <TableColumn fx:id="wordSkuColumn" prefWidth="267.0" text="SKU" />
+                     <TableColumn fx:id="wordQuantityColumn" prefWidth="283.0" text="Quantity" />
+                  </columns>
+               </TableView>
+               <Label fx:id="wordSearchStatusLabel" layoutX="45.0" layoutY="58.0" prefHeight="18.0" prefWidth="688.0" text="Please select a product and enter a word to find">
+            <font>
+               <Font size="14.0" />
+            </font></Label>
+         </AnchorPane>
+   </Tab>
 </TabPane>

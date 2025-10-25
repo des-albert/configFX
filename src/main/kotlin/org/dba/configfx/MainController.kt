@@ -5,6 +5,7 @@ import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.Projections
+import com.mongodb.client.model.Sorts
 import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
@@ -55,19 +56,49 @@ class MainController {
     data class AggregationResult(val product: String?, val count: Int)
     data class Part(var quantity: Int, val sku: String, val description: String)
     data class UcidInfo(val ucid: String, val fileName: String)
+    data class UcidSearchResult(val ucid: String, val sku: String, val fileName: String)
     data class SkuSearchResult(val ucid: String, val fileName: String, val quantity: Int)
+    data class WordSearchResult(val sku: String, var quantity: Int)
+
+
+    @FXML
+    lateinit var wordSearchButton: Button
+
+    @FXML
+    lateinit var wordSearchStatusLabel: Label
+
+    @FXML
+    lateinit var wordQuantityColumn: TableColumn<WordSearchResult, String>
+
+    @FXML
+    lateinit var wordSkuColumn: TableColumn<WordSearchResult, String>
+
+    @FXML
+    lateinit var wordResultsTableView: TableView<WordSearchResult>
+
+    @FXML
+    lateinit var wordSearchTextField: TextField
+
+    @FXML
+    lateinit var wordSearchComboBox: ComboBox<String>
+
+    @FXML
+    lateinit var tabWordSearch: Tab
 
     @FXML
     lateinit var radio2026: RadioButton
+
     @FXML
     lateinit var radio2025: RadioButton
+
     @FXML
     lateinit var radio2024: RadioButton
+
     @FXML
     lateinit var yearGroup: ToggleGroup
 
     @FXML
-    lateinit var tabSKUsearch: Tab
+    lateinit var tabSKUSearch: Tab
 
     @FXML
     lateinit var tabParts: Tab
@@ -236,6 +267,9 @@ class MainController {
         skuFileNameColumn.cellValueFactory = PropertyValueFactory("fileName")
         skuQuantityColumn.cellValueFactory = PropertyValueFactory("quantity")
 
+        wordSkuColumn.cellValueFactory = PropertyValueFactory("sku")
+        wordQuantityColumn.cellValueFactory = PropertyValueFactory("quantity")
+
         val months = Month.entries.map { it.getDisplayName(TextStyle.FULL, Locale.ENGLISH) }
         monthComboBox.items = FXCollections.observableArrayList(months)
         yearTextField.text = LocalDate.now().year.toString()
@@ -246,7 +280,9 @@ class MainController {
                 MongoManage.collection.distinct<String>("product", Filters.ne("product", null)).toList().sorted()
             }
             productSearchComboBox.items = FXCollections.observableArrayList(products)
-            productSearchComboBox.promptText = "Select a Product"
+
+            wordSearchComboBox.items = FXCollections.observableArrayList(products)
+
         }
         ucidFileName = ""
     }
@@ -283,11 +319,11 @@ class MainController {
     fun yearSelect() {
         val selectedToggle = yearGroup.selectedToggle
         var selectedYear = ""
-        if (selectedToggle != null ) {
+        if (selectedToggle != null) {
             val selectedRadio = selectedToggle as RadioButton
             selectedYear = selectedRadio.text
         }
-        if ( selectedYear !== currentYear) {
+        if (selectedYear !== currentYear) {
             currentYear = selectedYear
             yearTextField.text = currentYear
 
@@ -303,7 +339,7 @@ class MainController {
                 textAreaResult.text = "Year $currentYear selected count: $count"
             }
         }
-     
+
     }
 
     @FXML
@@ -447,7 +483,7 @@ class MainController {
         val selectedMonthName = monthComboBox.value
 
 
-        if (selectedMonthName.isNullOrBlank() ) {
+        if (selectedMonthName.isNullOrBlank()) {
             productTableView.placeholder = Label("Please select a month and enter a year")
             return
         }
@@ -785,6 +821,128 @@ class MainController {
             logger.error("Failed to scan file $filePath for SKU $skuToSearch", e)
         }
         return 0
+    }
+
+    @FXML
+    fun searchWord() {
+        val selectedProduct = wordSearchComboBox.value
+        val wordToSearch = wordSearchTextField.text
+
+        if (selectedProduct.isNullOrBlank() || wordToSearch.isNullOrBlank()) {
+            wordSearchStatusLabel.text = "Please select a product and enter a word to search"
+            return
+        }
+
+        wordSearchButton.isDisable = true
+        wordResultsTableView.items.clear()
+        wordSearchStatusLabel.text = "Finding UCIDs for selected product: $selectedProduct..."
+
+        var foundFiles = 0
+        controllerScope.launch {
+            try {
+                val searchResults = withContext(Dispatchers.IO) {
+                    val ucidInfoList = fetchRecentUcidInfo(selectedProduct)
+                    val totalFiles = ucidInfoList.size
+                    val foundResults = mutableListOf<WordSearchResult>()
+
+
+                    withContext(Dispatchers.JavaFx) {
+                        skuSearchStatusLabel.text = "Found $totalFiles files. Now scanning for word: $wordToSearch..."
+                    }
+
+                    ucidInfoList.forEachIndexed { index, ucidInfo ->
+                        withContext(Dispatchers.JavaFx) {
+                            skuSearchStatusLabel.text =
+                                "Scanning file ${index + 1} of $totalFiles: ${ucidInfo.fileName.substringAfterLast('\\')}"
+                        }
+
+                        val filePath = Paths.get(archiveBasePath, ucidInfo.fileName)
+                        if (Files.exists(filePath)) {
+                            val sku = scanFileForWord(filePath.toString(), wordToSearch)
+                            if (sku != "") {
+                                foundFiles += 1
+                                val item = foundResults.find { it.sku == sku }
+                                if (item != null) {
+                                    item.quantity += 1
+                                } else {
+                                    foundResults.add(WordSearchResult(sku, 1))
+                                }
+                            }
+                        } else {
+                            logger.warn(" word File not found, skipping scan: $filePath")
+                        }
+                    }
+                    foundResults
+                }
+
+                val sortedList = searchResults.sortedByDescending { it.quantity }
+
+                wordResultsTableView.items = FXCollections.observableArrayList(sortedList)
+                if (searchResults.isEmpty()) {
+                    wordSearchStatusLabel.text = "word $wordToSearch not found in any files for product $selectedProduct"
+                } else {
+                    wordSearchStatusLabel.text = "Search Complete. Found word in $foundFiles files."
+                }
+
+
+            } catch (e: Exception) {
+                logger.error("Error during word search", e)
+                wordSearchStatusLabel.text = "Error during search. See logs for details."
+            } finally {
+                wordSearchButton.isDisable = false
+
+            }
+        }
+    }
+
+    private suspend fun fetchRecentUcidInfo(product: String): List<UcidInfo> {
+        val pipeline = listOf(
+            Aggregates.match(eq("product", product)),
+
+            Aggregates.sort(Sorts.descending("exportDate")),
+
+            Aggregates.group(
+                "\$ope",
+                Accumulators.first("ucid", "\$ucid"),
+                Accumulators.first("fileName", "\$fileName")
+            ),
+            Aggregates.project(
+                Projections.fields(
+                    Projections.include("ucid", "fileName"),
+                    Projections.excludeId()
+
+                )
+            )
+        )
+        return MongoManage.collection
+            .withDocumentClass<UcidInfo>()
+            .aggregate(pipeline)
+            .toList()
+    }
+
+    private fun scanFileForWord(filePath: String, wordToSearch: String): String {
+        try {
+            Files.newInputStream(Paths.get(filePath)).use { inputStream ->
+                val workbook = WorkbookFactory.create(inputStream)
+                val sheet = workbook.getSheet("ExpertBOM") ?: return ""
+
+                for (rowIndex in 6..sheet.lastRowNum) {
+                    val row = sheet.getRow(rowIndex) ?: continue
+                    val descriptionCell = row.getCell(3)
+                    val descriptionValue = dataFormatter.formatCellValue(descriptionCell).trim()
+                    if (descriptionValue.contains(wordToSearch, ignoreCase = true)) {
+                        val skuCell = row.getCell(2)
+                        if (skuCell != null && skuCell.cellType == CellType.STRING) {
+                            return skuCell.stringCellValue
+                        }
+                    }
+                }
+            }
+
+        } catch (e: Exception) {
+            logger.error("Failed to scan file $filePath for word $wordToSearch", e)
+        }
+        return ""
     }
 
 
