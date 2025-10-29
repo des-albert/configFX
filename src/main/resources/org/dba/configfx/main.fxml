@@ -22,9 +22,9 @@
             <Button fx:id="buttonStore" layoutX="866.0" layoutY="28.0" mnemonicParsing="false" onAction="#storeConfigData" text="Store Configs" />
             <Button fx:id="buttonQuit" layoutX="893.0" layoutY="297.0" mnemonicParsing="false" onAction="#quit" text="Quit" />
             <TextField fx:id="textFieldUCID" layoutX="151.0" layoutY="30.0" promptText="ucid" />
-            <TextField fx:id="textFieldCustomer" layoutX="158.0" layoutY="86.0" prefHeight="25.0" prefWidth="555.0" />
+            <TextField fx:id="textFieldCustomer" layoutX="158.0" layoutY="86.0" prefHeight="25.0" prefWidth="631.0" />
             <TextField fx:id="textFieldOPE" layoutX="158.0" layoutY="166.0" prefHeight="25.0" prefWidth="149.0" />
-            <TextField fx:id="textFieldFileName" layoutX="158.0" layoutY="247.0" prefHeight="25.0" prefWidth="559.0" />
+            <TextField fx:id="textFieldFileName" layoutX="158.0" layoutY="247.0" prefHeight="25.0" prefWidth="638.0" />
             <TextField fx:id="textFieldProduct" layoutX="158.0" layoutY="125.0" prefHeight="25.0" prefWidth="149.0" />
             <Label layoutX="39.0" layoutY="90.0" stylesheets="@../../../css/style.css" text="Customer" />
             <Label layoutX="40.0" layoutY="170.0" stylesheets="@../../../css/style.css" text="OPE" />
@@ -36,7 +36,7 @@
                 </font>
             </Label>
             <Label layoutX="40.0" layoutY="129.0" prefHeight="18.0" prefWidth="81.0" stylesheets="@../../../css/style.css" text="Product" />
-            <TextArea fx:id="textAreaResult" layoutX="158.0" layoutY="297.0" prefHeight="52.0" prefWidth="563.0" />
+            <TextArea fx:id="textAreaResult" layoutX="158.0" layoutY="297.0" prefHeight="290.0" prefWidth="639.0" />
             <TextField fx:id="textFieldDate" layoutX="158.0" layoutY="205.0" prefHeight="25.0" prefWidth="149.0" />
          <Button fx:id="buttonParts" layoutX="889.0" layoutY="84.0" mnemonicParsing="false" onAction="#scanFile" text="Parts" />
          <RadioButton fx:id="radio2024" layoutX="467.0" layoutY="139.0" mnemonicParsing="false" onAction="#yearSelect" text="2024">
