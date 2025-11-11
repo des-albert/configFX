@@ -24,11 +24,11 @@
             <TextField fx:id="textFieldUCID" layoutX="151.0" layoutY="30.0" promptText="ucid" />
             <TextField fx:id="textFieldCustomer" layoutX="158.0" layoutY="86.0" prefHeight="25.0" prefWidth="631.0" />
             <TextField fx:id="textFieldOPE" layoutX="158.0" layoutY="166.0" prefHeight="25.0" prefWidth="149.0" />
-            <TextField fx:id="textFieldFileName" layoutX="158.0" layoutY="247.0" prefHeight="25.0" prefWidth="638.0" />
+            <TextField fx:id="textFieldFileName" layoutX="159.0" layoutY="255.0" prefHeight="25.0" prefWidth="638.0" />
             <TextField fx:id="textFieldProduct" layoutX="158.0" layoutY="125.0" prefHeight="25.0" prefWidth="149.0" />
             <Label layoutX="39.0" layoutY="90.0" stylesheets="@../../../css/style.css" text="Customer" />
             <Label layoutX="40.0" layoutY="170.0" stylesheets="@../../../css/style.css" text="OPE" />
-            <Label layoutX="32.0" layoutY="251.0" prefHeight="18.0" prefWidth="63.0" text="fileName" />
+            <Label layoutX="35.0" layoutY="259.0" prefHeight="18.0" prefWidth="63.0" text="fileName" />
             <Label layoutX="40.0" layoutY="209.0" stylesheets="@../../../css/style.css" text="Date" />
             <Label layoutX="36.0" layoutY="22.0" text="configFX">
                 <font>
@@ -36,7 +36,7 @@
                 </font>
             </Label>
             <Label layoutX="40.0" layoutY="129.0" prefHeight="18.0" prefWidth="81.0" stylesheets="@../../../css/style.css" text="Product" />
-            <TextArea fx:id="textAreaResult" layoutX="158.0" layoutY="297.0" prefHeight="290.0" prefWidth="639.0" />
+            <TextArea fx:id="textAreaResult" layoutX="158.0" layoutY="349.0" prefHeight="290.0" prefWidth="639.0" />
             <TextField fx:id="textFieldDate" layoutX="158.0" layoutY="205.0" prefHeight="25.0" prefWidth="149.0" />
          <Button fx:id="buttonParts" layoutX="889.0" layoutY="84.0" mnemonicParsing="false" onAction="#scanFile" text="Parts" />
          <RadioButton fx:id="radio2024" layoutX="467.0" layoutY="139.0" mnemonicParsing="false" onAction="#yearSelect" text="2024">
@@ -46,6 +46,8 @@
          </RadioButton>
          <RadioButton fx:id="radio2025" layoutX="467.0" layoutY="170.0" mnemonicParsing="false" onAction="#yearSelect" selected="true" text="2025" toggleGroup="$yearGroup" />
          <RadioButton fx:id="radio2026" layoutX="467.0" layoutY="197.0" mnemonicParsing="false" onAction="#yearSelect" text="2026" toggleGroup="$yearGroup" />
+
+
         </AnchorPane>
     </Tab>
 

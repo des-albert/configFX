@@ -310,6 +310,7 @@ class MainController {
                 textFieldFileName.text = config.fileName
                 textFieldCustomer.text = config.customer
                 textFieldDate.text = config.exportDate
+
                 textAreaResult.text = "Successfully loaded data for customer: ${config.customer}"
 
                 ucidDirName = config.fileName.split("\\").first()
