@@ -54,7 +54,7 @@ class MainController {
     data class UcidDetails(val ucid: String, val exportDate: String)
     data class UcidOpeQueryResult(val ucid: String, val exportDate: String)
     data class AggregationResult(val product: String?, val count: Int)
-    data class Part(var quantity: Int, val sku: String, val description: String)
+    data class Part(var quantity: Int, val sku: String, val description: String, val type: String)
     data class UcidInfo(val ucid: String, val fileName: String)
     data class UcidSearchResult(val ucid: String, val sku: String, val fileName: String)
     data class SkuSearchResult(val ucid: String, val fileName: String, val quantity: Int)
@@ -186,6 +186,9 @@ class MainController {
     lateinit var productColumn: TableColumn<ProductCount, String>
 
     @FXML
+    lateinit var typeColumn: TableColumn<ProductCount, String>
+
+    @FXML
     lateinit var productTableView: TableView<ProductCount>
 
     @FXML
@@ -240,7 +243,7 @@ class MainController {
 
 
     companion object {
-        val logger: Logger = LoggerFactory.getLogger("mongoFX")
+        val logger: Logger = LoggerFactory.getLogger("configFX")
     }
 
     var products: List<String> = emptyList()
@@ -266,6 +269,8 @@ class MainController {
         skuColumn.cellValueFactory = PropertyValueFactory("sku")
         descriptionColumn.cellValueFactory = PropertyValueFactory("description")
         quantityColumn.cellValueFactory = PropertyValueFactory("quantity")
+        typeColumn.cellValueFactory = PropertyValueFactory("type")
+
 
         skuUcidColumn.cellValueFactory = PropertyValueFactory("ucid")
         skuFileNameColumn.cellValueFactory = PropertyValueFactory("fileName")
@@ -681,9 +686,9 @@ class MainController {
                 lines
                     .filter { it.isNotBlank() && !it.startsWith("#") }
                     .mapNotNull { line ->
-                        val parts = line.split(',', limit = 2)
-                        if (parts.size == 2) {
-                            Part(quantity = 0, sku = parts[0].trim(), description = parts[1].trim())
+                        val parts = line.split(',', limit = 3)
+                        if (parts.size == 3) {
+                            Part(quantity = 0, sku = parts[0].trim(), description = parts[1].trim(), parts[2].trim())
                         } else {
                             logger.warn("Skipping malformed line in parts list: '$line'")
                             null
@@ -719,7 +724,10 @@ class MainController {
                             if (part.sku == "S4R96A" || part.sku == "S6G97A" || part.sku == "S6Y07A") {
                                 serverCount = if (quantityValue > 0) quantityValue else 1
                             }
-                            part.quantity += quantityValue / serverCount
+                            if (part.type != "PDU")
+                                part.quantity += quantityValue / serverCount
+                            else
+                                part.quantity += quantityValue
                         }
                     }
                 }

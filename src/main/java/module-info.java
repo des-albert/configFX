@@ -1,5 +1,5 @@
 
-module org.dba.mongofx {
+module org.dba.configfx {
     requires javafx.controls;
     requires javafx.fxml;
     requires kotlin.stdlib;
