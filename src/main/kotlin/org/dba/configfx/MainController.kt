@@ -867,7 +867,7 @@ class MainController {
 
 
                     withContext(Dispatchers.JavaFx) {
-                        skuSearchStatusLabel.text = "Found $totalFiles files. Now scanning for word: $wordToSearch..."
+                        wordSearchStatusLabel.text = "Found $totalFiles files. Now scanning for word: $wordToSearch..."
                     }
 
                     ucidInfoList.forEachIndexed { index, ucidInfo ->
