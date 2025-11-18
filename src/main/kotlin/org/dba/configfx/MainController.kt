@@ -721,7 +721,7 @@ class MainController {
                         val quantCell = row.getCell(1)
                         if (quantCell != null && quantCell.cellType == CellType.NUMERIC) {
                             val quantityValue = quantCell.numericCellValue.toInt()
-                            if (part.sku == "S4R96A" || part.sku == "S6G97A" || part.sku == "S6Y07A") {
+                            if (part.sku == "S4R96A" || part.sku == "S6G97A" || part.sku == "S6Y07A" || part.sku == "S3W15A") {
                                 serverCount = if (quantityValue > 0) quantityValue else 1
                             }
                             if (part.type != "PDU")
