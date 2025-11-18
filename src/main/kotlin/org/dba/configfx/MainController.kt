@@ -284,17 +284,24 @@ class MainController {
         monthComboBox.items = FXCollections.observableArrayList(months)
         yearTextField.text = LocalDate.now().year.toString()
 
+        load_products()
+
+        ucidFileName = ""
+    }
+
+    private fun load_products() {
         controllerScope.launch {
             productSearchComboBox.promptText = "Loading products ..."
             val products = withContext(Dispatchers.IO) {
                 MongoManage.collection.distinct<String>("product", Filters.ne("product", null)).toList().sorted()
             }
+            productSearchComboBox.items.clear()
             productSearchComboBox.items = FXCollections.observableArrayList(products)
 
+            wordSearchComboBox.items.clear()
             wordSearchComboBox.items = FXCollections.observableArrayList(products)
 
         }
-        ucidFileName = ""
     }
 
     @FXML
@@ -349,6 +356,8 @@ class MainController {
                 }
                 textAreaResult.text = "Year $currentYear selected count: $count"
             }
+
+            load_products()
         }
 
     }
