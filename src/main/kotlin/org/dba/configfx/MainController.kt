@@ -60,6 +60,10 @@ class MainController {
     data class SkuSearchResult(val ucid: String, val fileName: String, val quantity: Int)
     data class WordSearchResult(val sku: String, val description: String, var quantity: Int)
 
+    @FXML
+    lateinit var labelJavaFX: Label
+    @FXML
+    lateinit var labelJDK: Label
 
     @FXML
     lateinit var wordSearchButton: Button
@@ -283,6 +287,9 @@ class MainController {
         val months = Month.entries.map { it.getDisplayName(TextStyle.FULL, Locale.ENGLISH) }
         monthComboBox.items = FXCollections.observableArrayList(months)
         yearTextField.text = LocalDate.now().year.toString()
+
+        labelJDK.text = "Java SDK version: ${Runtime.version()}"
+        labelJavaFX.text = "JavaFX version: ${System.getProperty("javafx.runtime.version")}"
 
         load_products()
 
