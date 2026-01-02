@@ -44,8 +44,8 @@
                <ToggleGroup fx:id="yearGroup" />
             </toggleGroup>
          </RadioButton>
-         <RadioButton fx:id="radio2025" layoutX="467.0" layoutY="170.0" mnemonicParsing="false" onAction="#yearSelect" selected="true" text="2025" toggleGroup="$yearGroup" />
-         <RadioButton fx:id="radio2026" layoutX="467.0" layoutY="197.0" mnemonicParsing="false" onAction="#yearSelect" text="2026" toggleGroup="$yearGroup" />
+         <RadioButton fx:id="radio2025" layoutX="467.0" layoutY="170.0" mnemonicParsing="false" onAction="#yearSelect" text="2025" toggleGroup="$yearGroup" />
+         <RadioButton fx:id="radio2026" layoutX="467.0" layoutY="197.0" mnemonicParsing="false" onAction="#yearSelect" selected="true" text="2026" toggleGroup="$yearGroup" />
 
 
         </AnchorPane>
