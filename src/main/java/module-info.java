@@ -8,7 +8,6 @@ module org.dba.configfx {
     requires kotlinx.coroutines.core;
     requires kotlinx.coroutines.javafx;
 
-
     opens org.dba.configfx to javafx.fxml;
     exports org.dba.configfx;
 }
