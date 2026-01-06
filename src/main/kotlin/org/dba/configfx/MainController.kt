@@ -243,7 +243,7 @@ class MainController {
 
     var ucidFileName: String = ""
     var ucidDirName: String = ""
-    var currentYear: String = "2025"
+    var currentYear: String = "2026"
 
 
     companion object {
