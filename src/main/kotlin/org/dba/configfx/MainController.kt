@@ -291,12 +291,12 @@ class MainController {
         labelJDK.text = "Java SDK version: ${Runtime.version()}"
         labelJavaFX.text = "JavaFX version: ${System.getProperty("javafx.runtime.version")}"
 
-        load_products()
+        loadProducts()
 
         ucidFileName = ""
     }
 
-    private fun load_products() {
+    private fun loadProducts() {
         controllerScope.launch {
             productSearchComboBox.promptText = "Loading products ..."
             val products = withContext(Dispatchers.IO) {
@@ -364,7 +364,7 @@ class MainController {
                 textAreaResult.text = "Year $currentYear selected count: $count"
             }
 
-            load_products()
+            loadProducts()
         }
 
     }
