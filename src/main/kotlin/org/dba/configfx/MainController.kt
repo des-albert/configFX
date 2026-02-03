@@ -723,7 +723,9 @@ class MainController {
     private fun scanForParts(filePath: String, searchList: List<Part>) {
         Files.newInputStream(Paths.get(filePath)).use { inputStream ->
             val workbook = WorkbookFactory.create(inputStream)
-            val sheet = workbook.getSheet("ExpertBOM") ?: return
+            val sheet = workbook.getSheet("ExpertBOM")
+                ?: workbook.getSheet("BOM")
+                ?: return
             var serverCount = 1
 
             for (rowIndex in 6..sheet.lastRowNum) {
