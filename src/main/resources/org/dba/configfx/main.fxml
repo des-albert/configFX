@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700" prefWidth="1100.0" styleClass="root" stylesheets="@../../../css/style.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dba.configfx.MainController">
+<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700" prefWidth="1100.0" styleClass="root" stylesheets="@../../../css/style.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/25.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dba.configfx.MainController">
     <Tab fx:id="tabMain" text="Main">
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="506.0" prefWidth="679.0">
             <Button fx:id="buttonLoad" layoutX="341.0" layoutY="28.0" mnemonicParsing="false" onAction="#loadData" text="Load Data" />
