@@ -202,6 +202,12 @@ class MainController {
     lateinit var downloadCheckBox: CheckBox
 
     @FXML
+    lateinit var skuAllProductsCheckBox: CheckBox
+
+    @FXML
+    lateinit var wordAllProductsCheckBox: CheckBox
+
+    @FXML
     lateinit var ucidDirTextField: TextField
 
     @FXML
@@ -246,11 +252,13 @@ class MainController {
     var currentYear: String = "2026"
 
 
+
     companion object {
         val logger: Logger = LoggerFactory.getLogger("configFX")
     }
 
     var products: List<String> = emptyList()
+    var ucidInfoList: List<UcidInfo> = emptyList()
 
     private val controllerScope = CoroutineScope(Dispatchers.JavaFx + SupervisorJob())
     private val dataFormatter = DataFormatter()
@@ -341,6 +349,7 @@ class MainController {
         }
     }
 
+    @FXML
     fun yearSelect() {
         val selectedToggle = yearGroup.selectedToggle
         var selectedYear = ""
@@ -691,6 +700,18 @@ class MainController {
         }
     }
 
+    @FXML
+    fun onUseSkuAllProducts() {
+        productSearchComboBox.isDisable = skuAllProductsCheckBox.isSelected
+        skuSearchStatusLabel.isDisable = skuAllProductsCheckBox.isSelected
+    }
+
+    @FXML
+    fun onUseWordAllProducts() {
+        wordSearchComboBox.isDisable = wordAllProductsCheckBox.isSelected
+        wordSearchStatusLabel.isDisable = wordAllProductsCheckBox.isSelected
+    }
+
 
     private fun loadSearchList(): List<Part> {
         val fileName = "/parts_to_scan.csv"
@@ -753,7 +774,7 @@ class MainController {
         }
     }
 
-    // For a selected product, scan all UCIDs to find a SKU
+    // For a selected product, or all Products, scan all UCIDs to find a SKU
 
     @FXML
     fun searchProductSku() {
@@ -771,7 +792,11 @@ class MainController {
         controllerScope.launch {
             try {
                 val searchResults = withContext(Dispatchers.IO) {
-                    val ucidInfoList = fetchUcidInfoForProduct(selectedProduct)
+                    if (skuAllProductsCheckBox.isSelected) {
+                        ucidInfoList = fetchUcidInfoForAll()
+                    } else {
+                        ucidInfoList = fetchUcidInfoForProduct(selectedProduct)
+                    }
                     val totalFiles = ucidInfoList.size
                     val foundResults = mutableListOf<SkuSearchResult>()
 
@@ -823,6 +848,19 @@ class MainController {
         return MongoManage.collection
             .withDocumentClass<UcidInfo>()
             .find(eq("product", product))
+            .projection(
+                Projections.fields(
+                    Projections.include("ucid", "fileName"),
+                    Projections.excludeId()
+                )
+            )
+            .toList()
+    }
+
+    private suspend fun fetchUcidInfoForAll(): List<UcidInfo> {
+        return MongoManage.collection
+            .withDocumentClass<UcidInfo>()
+            .find()
             .projection(
                 Projections.fields(
                     Projections.include("ucid", "fileName"),
