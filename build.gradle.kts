@@ -27,7 +27,7 @@ application {
     mainClass.set("org.dba.configfx.MainApplication")
 }
 kotlin {
-    jvmToolchain(24)
+    jvmToolchain(25)
 }
 
 javafx {
