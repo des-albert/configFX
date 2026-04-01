@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     application
-    id("org.jetbrains.kotlin.jvm") version "2.2.0"
-    id("org.javamodularity.moduleplugin") version "1.8.15"
+    id("org.jetbrains.kotlin.jvm") version "2.3.10"
+    id("org.javamodularity.moduleplugin") version "2.0.0"
     id("org.openjfx.javafxplugin") version "0.1.0"
-    id("org.beryx.jlink") version "2.25.0"
+    id("org.beryx.jlink") version "3.2.1"
 }
 
 group = "org.dba"
