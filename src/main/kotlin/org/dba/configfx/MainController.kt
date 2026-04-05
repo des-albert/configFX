@@ -307,7 +307,7 @@ class MainController {
     private fun loadProducts() {
         controllerScope.launch {
             productSearchComboBox.promptText = "Loading products ..."
-            val products = withContext(Dispatchers.IO) {
+            products = withContext(Dispatchers.IO) {
                 MongoManage.collection.distinct<String>("product", Filters.ne("product", null)).toList().sorted()
             }
             productSearchComboBox.items.clear()
@@ -357,7 +357,7 @@ class MainController {
             val selectedRadio = selectedToggle as RadioButton
             selectedYear = selectedRadio.text
         }
-        if (selectedYear !== currentYear) {
+        if (selectedYear != currentYear) {
             currentYear = selectedYear
             yearTextField.text = currentYear
 
