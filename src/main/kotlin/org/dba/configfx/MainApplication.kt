@@ -3,6 +3,7 @@ package org.dba.configfx
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
+import javafx.scene.image.Image
 import javafx.stage.Stage
 
 class MainApplication : Application() {
@@ -12,6 +13,8 @@ class MainApplication : Application() {
 
         val fxmlLoader = FXMLLoader(MainApplication::class.java.getResource("main.fxml"))
         val scene = Scene(fxmlLoader.load(), 1100.0, 700.0)
+        val icon = Image(javaClass.getResourceAsStream("/img/configFX.png"))
+        stage.icons.add(icon)
         stage.title = "configFX"
         stage.scene = scene
         stage.show()
